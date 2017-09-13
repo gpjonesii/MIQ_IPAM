@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: DynamicElementGetNextAvailableHost
+    inherits: 
+    description: 
+  fields:
+  - execute:
+      value: dynamic_element_get_next_available_host
