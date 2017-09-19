@@ -8,5 +8,7 @@ object:
     inherits: 
     description: 
   fields:
+  - debug:
+      value: "/Discovery/ObjectWalker/object_walker"
   - execute:
       value: deallocate_ip_address

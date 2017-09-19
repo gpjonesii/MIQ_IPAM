@@ -13,12 +13,12 @@ object:
   schema:
   - field:
       aetype: attribute
-      name: db_server
+      name: db_hostname
       display_name: 
       datatype: string
       priority: 1
       owner: 
-      default_value: localhost
+      default_value: 10.40.141.5
       substitute: true
       message: "*"
       visibility: 
@@ -58,7 +58,7 @@ object:
       datatype: password
       priority: 3
       owner: 
-      default_value: v2:{Ch3av9NwQ35Wyw2COz3jkg==}
+      default_value: v2:{s6UKuwzSNkpFi0uNuP+0Ow==}
       substitute: true
       message: "*"
       visibility: 
@@ -92,11 +92,91 @@ object:
       max_retries: 
       max_time: 
   - field:
+      aetype: attribute
+      name: network_vlan
+      display_name: 
+      datatype: string
+      priority: 5
+      owner: 
+      default_value: 
+      substitute: true
+      message: "*"
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: distributed_virtual_switch
+      display_name: 
+      datatype: string
+      priority: 6
+      owner: 
+      default_value: 
+      substitute: true
+      message: "*"
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: attribute
+      name: distributed_port_group
+      display_name: 
+      datatype: string
+      priority: 7
+      owner: 
+      default_value: 
+      substitute: true
+      message: "*"
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
+      aetype: relationship
+      name: debug
+      display_name: 
+      datatype: string
+      priority: 8
+      owner: 
+      default_value: 
+      substitute: true
+      message: "*"
+      visibility: 
+      collect: 
+      scope: 
+      description: 
+      condition: 
+      on_entry: 
+      on_exit: 
+      on_error: 
+      max_retries: 
+      max_time: 
+  - field:
       aetype: method
       name: execute
       display_name: 
       datatype: string
-      priority: 5
+      priority: 9
       owner: 
       default_value: 
       substitute: true

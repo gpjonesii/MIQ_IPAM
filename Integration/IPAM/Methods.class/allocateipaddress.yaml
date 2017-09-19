@@ -8,5 +8,15 @@ object:
     inherits: 
     description: 
   fields:
+  - db_password:
+      value: v2:{s6UKuwzSNkpFi0uNuP+0Ow==}
+  - network_vlan:
+      value: vxw-dvs-203-virtualwire-4-sid-70003-LS-10.40.141.0/24-Guest
+  - distributed_virtual_switch:
+      value: vxw-dvs-203-virtualwire-4-sid-70003-LS-10.40.141.0/24-Guest
+  - distributed_port_group:
+      value: vxw-dvs-203-virtualwire-4-sid-70003-LS-10.40.141.0/24-Guest
+  - debug:
+      value: "/Discovery/ObjectWalker/object_walker"
   - execute:
       value: allocate_ip_address

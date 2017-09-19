@@ -6,8 +6,8 @@ object:
     name: MIQ_IPAM
     description: 
     display_name: 
-    priority: 5
+    priority: 4
     enabled: true
-    tenant_id: 10000000000001
+    tenant_id: 99000000000001
     source: user
     top_level_namespace: 

@@ -6,6 +6,11 @@ def log_and_update_message(level, msg, update_message=false)
   @task.message = msg if @task && (update_message || level == 'error')
 end
 
+def encode_slash(string)
+  encoded_string = string.gsub("/","%2f")
+  return encoded_string
+end
+
 def parse_hash(hash, options_hash=Hash.new { |h, k| h[k] = {} })
   regex = /^infoblox_nic_(\d*)_(.*)/
   hash.each do |key, value|
@@ -79,7 +84,7 @@ def get_network_devicetype(nic_index, nic_options)
 end
 
 def get_network_vlan(nic_index, nic_options)
-  vlan = $evm.object['vlan'] || nic_options[:vlan] ||
+  vlan = encode_slash($evm.object['vlan']) || nic_options[:vlan] ||
     log_and_update_message(:info, "nic_index: #{nic_index} vlan: #{vlan}")
     return vlan
 end
@@ -120,7 +125,8 @@ begin
                    :password => "#{$evm.object.decrypt('db_password')}",
                    :host => "#{$evm.object['db_hostname']}" )
 
-  hostname = $evm.object['vm_target_name']
+  hostname = $evm.root['miq_provision'].options[:vm_name]
+  $evm.log(:info, "DEBUG: Searching database for the IP address of hostname: #{hostname}")
   res = con.exec "select hostname,ipaddr,subnet,gateway,dns1,dns2 from hosts where hostname like \'#{hostname}%\'"
 
   if not res
@@ -154,19 +160,23 @@ begin
 
     # build network_ settings hash
     adapter_settings = {
-      :devicetype => "VirtualE1000" #get_network_devicetype(nic_index, nic_options),
+      :network => encode_slash($evm.object['network_vlan']),
+      :devicetype => get_network_devicetype(nic_index, nic_options),
+      :is_dvs => true
     }
-#    dvs = $evm.object['distributed_virtual_switch']
-#    portgroup = $evm.object['distributed_port_group']
-#    @task.set_dvs("#{portgroup}")
+    dvs = encode_slash($evm.object['distributed_virtual_switch'])
+    portgroup = encode_slash($evm.object['distributed_port_group'])
+    @task.set_dvs("#{portgroup}")
     @task.set_network_adapter(nic_index, adapter_settings)
     log_and_update_message(:info, "VM: #{hostname} nic: #{nic_index} nic_settings: #{nic_settings} adapter_settings: #{adapter_settings}")
 
     # build task options
     dns_servers = "#{dns1},#{dns2}"
     set_task_options(nic_index, hostname, fqdn, dns_servers)
-  end
-res = con.exec "update hosts set provisioning = FALSE, allocated = TRUE, mod_date = \'#{now.year()}-#{now.mon()}-#{now.mday()} #{now.hour()}:#{now.min()}:#{now.sec()}\' where hostname like \'#{hostname}%\'"
+    unless hostname 
+      res = con.exec "update hosts set provisioning = FALSE, allocated = TRUE, mod_date = \'#{now.year()}-#{now.mon()}-#{now.mday()} #{now.hour()}:#{now.min()}:#{now.sec()}\' where hostname like \'#{hostname}%\'"
+    end
+   end
 
   # Set Ruby rescue behavior
 rescue => err

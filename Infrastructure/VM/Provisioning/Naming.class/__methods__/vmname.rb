@@ -22,6 +22,7 @@ module ManageIQ
                 @handle.log("info", "Detected vmdb_object_type:<#{@handle.root['vmdb_object_type']}>")
 #                @handle.object['vmname'] = derived_name.compact.join
                 @handle.object['vmname'] = next_available_name_from_db
+                @handle.log(:info, "DEBUG: vmname is set to #{ @handle.object['vmname'] }")
                 provision_object.set_option(:miq_force_unique_name, false)
                 @handle.log(:info, "vmname: \"#{@handle.object['vmname']}\"")
               end
@@ -45,11 +46,10 @@ module ManageIQ
                                    :password => "#{$evm.object.decrypt('db_password')}",
                                    :host => "#{$evm.object['db_hostname']}" )
 
-                  res = con.exec "select hostname,ipaddr from hosts where hosts.allocated='f' and hosts.provisioning='f' limit 1;"
+                  res = con.exec "select hostname,ipaddr from hosts where allocated = FALSE and provisioning = FALSE limit 1;"
                   if res then
                     $evm.log(:info, "Found an available hostname and ip address: #{res.first['hostname']} :: #{res.first['ipaddr']}")
-                    update = con.exec "update hosts set provisioning = TRUE where hosts.hostname = \'#{res.first['hostname']}\';"
-                    update_date = con.exec "update hosts set mod_date = \'#{now.year()}-#{now.mon()}-#{now.mday()} #{now.hour()}:#{now.min()}:#{now.sec()}\' where hosts.hostname = \'#{res.first['hostname']}\';" 
+                    update = con.exec "update hosts set provisioning = TRUE , mod_date = \'#{now.year()}-#{now.mon()}-#{now.mday()} #{now.hour()}:#{now.min()}:#{now.sec()}\' where hostname = \'#{res.first['hostname']}\';"
                   else
                     $evm.log(:info, "Couldn't get a hostname from the database")
                   end            
